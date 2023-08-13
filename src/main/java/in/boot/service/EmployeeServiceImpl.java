@@ -1,4 +1,4 @@
-package in.boot.service;
+     package in.boot.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import in.boot.bindings.EmployeeResponse;
 import in.boot.entity.Employee;
@@ -21,16 +22,24 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	@Override
 	public Long creatEmployee(Employee employee) {
 		Employee isSaved = repo.save(employee);
-		return isSaved.getEId();
+		if (isSaved.getEId() != null) {
+			return isSaved.getEId();
+		}
+		return null;
 	}
+
 	@Override
 	public List<Employee> fetchingAllEmployees() {
 		List<Employee> lists = repo.findAll();
-		return lists;
+		if (!lists.isEmpty()) {
+			return lists;
+		}
+		return null;
 	}
+
 	@Override
 	public EmployeeResponse fetchEmployeeById(Long Id) {
-	   EmployeeResponse response=new EmployeeResponse();
+		EmployeeResponse response = new EmployeeResponse();
 		Optional<Employee> opt = repo.findById(Id);
 		if (opt.isPresent()) {
 			Employee employ = opt.get();
@@ -38,22 +47,44 @@ public class EmployeeServiceImpl implements IEmployeeService {
 			return response;
 		} else
 			throw new EmployeeNotFoundException("Employee DoesNot Exist with" + Id);
-
 	}
-		@Override
-		public void deleteEmployeeById(Long Id) {
-			
-      Optional<Employee> opt = repo.findById(Id);		
-      
-      if(opt.isPresent())
-      {
-    	   repo.deleteById(Id);
-      }else
-    	  throw  new EmployeeNotFoundException("Employee with this Id Not Exist");
-}
+	@Override
+	public void deleteEmployeeById(Long Id) {
+
+		Optional<Employee> opt = repo.findById(Id);
+
+		if (opt.isPresent()) {
+			repo.deleteById(Id);
+		} else
+			throw new EmployeeNotFoundException("Employee Doesnot Exist with"+Id);
+	}
+
+	@Override
+	public Long updateEmployeeById(Employee employee) {
+	
+		       Long getId= employee.getEId();
+		       if(getId!=null & repo.existsById(getId))
+		       {
+		    	   Employee isUpdated=repo.save(employee);
+		    	   return isUpdated.getEId();
+		       }else
+		    	   throw new EmployeeNotFoundException("No Employee Found With"+getId);		
+	}
+
+	@Transactional
+	public Long updateEmployeePassword(String empPassword,Long empMobile) {
+		{
+		return	repo.updatePassword(empPassword, empMobile);
 		}
+		}
+
+	
+
+	
+	}
 		
-		
+               
+
 		
 		
 		

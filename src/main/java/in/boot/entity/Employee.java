@@ -20,8 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="EMP_TAB")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class Employee {
 
 	@Id
@@ -31,7 +30,9 @@ public class Employee {
 	private Long eId;
 	private String empName;
 	private String empEmail;
-	private Long   empMobile;
+	private String empPassword;
+	private LocalDate empdob;
+	private Long empMobile;
 	private String address;
 	
 	private String createdBy;  

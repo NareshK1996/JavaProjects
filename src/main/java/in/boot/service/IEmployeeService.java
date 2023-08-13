@@ -14,7 +14,8 @@ public interface IEmployeeService {
 	public List<Employee> fetchingAllEmployees();
 	public EmployeeResponse fetchEmployeeById(Long Id);
 	public  void deleteEmployeeById(Long Id);
-//	public EmployeeResponse updatedEmployeeById(EmployeeResponse  response);
+    public Long updateEmployeeById(Employee employee);
+    public Long updateEmployeePassword(String empPassword,Long empMobile);
 	
 	
 }
